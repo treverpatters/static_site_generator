@@ -26,6 +26,10 @@ class TestTextNode(unittest.TestCase):
         node = LeafNode("a", "Click me!", {"href": "https://www.google.com"})
         node2 = LeafNode("a", "Click me!", {"href": "https://www.google.com"})
         self.assertEqual(node, node2)
+    def test_to_html_with_children(self):
+        child_node = LeafNode("span", "child")
+        parent_node = ParentNode("div", [child_node])
+        self.assertEqual(parent_node.to_html(), "<div><span>child</span></div>")
 
     
 

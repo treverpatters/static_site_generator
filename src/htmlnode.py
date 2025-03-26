@@ -34,14 +34,51 @@ class LeafNode(HTMLNode):
 
     def to_html(self):
         if self.value == None:
-            raise ValueError("no node")
+            raise ValueError("that's major depression")
         if self.tag == None:
             return self.value
         if self.props == None:
             return f"<{self.tag}>{self.value}</{self.tag}>"
         else:
             return f"<{self.tag} {self.props_to_html()}>{self.value}</{self.tag}>"
+
+class ParentNode(HTMLNode):
+    def __init__(self, tag, children, props=None):
+        super().__init__(tag, None, children, props)
+    
+    def to_html(self):
+        full_string = ""
+        if self.tag == None:
+            raise ValueError("no tag")
+        if self.children == None:
+            raise ValueError("childless")
+        
+        string_to_add = f"<{self.tag}>"
+        full_string += string_to_add
+
+        for child in self.children:
+            full_string += child.to_html()
+        
+        full_string += f"</{self.tag}>"
+        return full_string
+    
+    def text_node_to_html_node(text_node):
+        if text_node.TextType.TEXT:
+            pass
+        if text_node.TextType.BOLD:
+            pass
+        if text_node.TextType.ITALIC:
+            pass
+        if text_node.TextType.CODE:
+            pass
+        if text_node.TextType.LINK:
+            pass
+        if text_node.TextType.IMAGE:
+            pass
             
+
+
+                    
 
             
 
