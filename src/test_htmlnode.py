@@ -31,6 +31,7 @@ class TestTextNode(unittest.TestCase):
         parent_node = ParentNode("div", [child_node])
         self.assertEqual(parent_node.to_html(), "<div><span>child</span></div>")
 
+
     
 
 

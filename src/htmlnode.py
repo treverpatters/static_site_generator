@@ -1,3 +1,4 @@
+from textnode import TextType
 
 class HTMLNode:
     def __init__(self, tag=None, value=None, children=None, props=None):
@@ -62,20 +63,26 @@ class ParentNode(HTMLNode):
         full_string += f"</{self.tag}>"
         return full_string
     
-    def text_node_to_html_node(text_node):
-        if text_node.TextType.TEXT:
-            pass
-        if text_node.TextType.BOLD:
-            pass
-        if text_node.TextType.ITALIC:
-            pass
-        if text_node.TextType.CODE:
-            pass
-        if text_node.TextType.LINK:
-            pass
-        if text_node.TextType.IMAGE:
-            pass
-            
+def text_node_to_html_node(text_node):
+    if text_node.text_type == TextType.NORMAL_TEXT:
+        return LeafNode(None, text_node.text)
+    if text_node.text_type == TextType.BOLD:
+        return LeafNode("b", text_node.text)
+    if text_node.text_type == TextType.ITALIC_TEXT:
+        return LeafNode("i", text_node.text)
+    if text_node.text_type == TextType.CODE_TEXT:
+        return LeafNode("code", text_node.text)
+    if text_node.text_type == TextType.LINK:
+        if not hasattr(text_node, "url") or not text_node.url:
+            raise ValueError("No valid url property for link")
+        return LeafNode("a", text_node.text, {"href": text_node.url})
+    if text_node.text_type == TextType.IMAGE:
+        if not hasattr(text_node, 'url') or not text_node.url:
+            raise ValueError("Missing 'url' property for image.")
+        alt_text = text_node.alt if hasattr(text_node, "alt") and text_node.alt else "No description available"
+        return LeafNode("img", "", {"src": text_node.url, "alt": alt_text})
+    else:
+        raise Exception("not valid text type")
 
 
                     
