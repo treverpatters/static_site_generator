@@ -124,12 +124,12 @@ def markdown_to_blocks(markdown):
     return keep_list
 
 class BlockType(Enum):
-    paragraph = "paragraph"
-    heading = "heading"
-    code = "code"
-    quote = "quote"
-    unordered_list = "unordered list"
-    ordered_list = "ordered_list"
+    PARAGRAPH = "paragraph"
+    HEADING = "heading"
+    CODE = "code"
+    QUOTE = "quote"
+    UNORDERED_LIST = "unordered list"
+    ORDERED_LIST = "ordered_list"
 
 def block_to_block_type(block):
     if (
@@ -140,24 +140,21 @@ def block_to_block_type(block):
         block[:5] == "#####" or
         block[:6] == "######"
         ):
-        return BlockType.heading
+        return BlockType.HEADING
     elif (
         block[:3] == "```" and
         block[-3:] == "```"
         ):
-        return BlockType.code
+        return BlockType.CODE
     lines = block.split("\n")
     quote_condition = all(line.startswith(">") for line in lines)
     if quote_condition:
-        return BlockType.quote
+        return BlockType.QUOTE
     unordered_list_condition = all(line.startswith("- ") for line in lines)
     if unordered_list_condition:
-        return BlockType.unordered_list
+        return BlockType.UNORDERED_LIST
     ordered_list_condition = all(line.startswith(f"{index + 1}. ") for index, line in enumerate(lines))
     if ordered_list_condition:
-        return BlockType.ordered_list
+        return BlockType.ORDERED_LIST
     else:
-        return BlockType.paragraph
-
-    
-    
+        return BlockType.PARAGRAPH
