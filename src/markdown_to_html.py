@@ -22,21 +22,41 @@ def markdown_to_html_node(markdown):
 
         if block_type == BlockType.HEADING:
             heading_level = count_heading_level(block)
-            html_block = HTMLNode(f"h{heading_level}", "", [])
+            heading_text = block[heading_level:].strip()
+            heading_node = HTMLNode(f"h{heading_level}", "", text_to_children(heading_text))
+            children_list.append(heading_node)
         elif block_type == BlockType.CODE:
             # manually make TextNode and use text_node_to_html_node
             code_content = extract_code_content(block)
-            code__text_node = TextNode(code_content, TextType.CODE_TEXT)
-            code_html_node = text_node_to_html_node(code__text_node)
+            code_text_node = TextNode(code_content, TextType.CODE_TEXT)
+            code_html_node = text_node_to_html_node(code_text_node)
             pre_node = HTMLNode("pre", "", [code_html_node])
             children_list.append(pre_node)
         elif block_type == BlockType.UNORDERED_LIST or block_type == BlockType.ORDERED_LIST:
             #need each line to have <li> tag
-            pass
+            lines = block.split("\n")
+            line_nodes = []
+            for line in lines:
+                if line.strip(): #skips empty lines
+                    if block_type == BlockType.UNORDERED_LIST:
+                        line_content = line.lstrip("*-").strip()
+                    else: #ORDERED LIST
+                        parts = line.split(".", 1)
+                        if len(parts) > 1:
+                            line_content = parts[1].strip()
+                        else:
+                            line_content = line.strip()
+                line_node = HTMLNode("li", "", text_to_children(line_content))
+                line_nodes.append(line_node)
+        elif block_type == BlockType.PARAGRAPH:
+            block_text = block.replace("\n", " ")
+            paragraph_node = HTMLNode("p", "", text_to_children(block_text))
+            children_list.append(paragraph_node)
+        elif block_type == BlockType.QUOTE:
+            quote_node = HTMLNode("blockquote", "", text_to_children(block))
+            children_list.append(quote_node)
         else:
-            # Assign child HTMLNdode objects to the block node using `text_to_children(text)`
-            html_block.children = text_to_children(block)
-            children_list.append(html_block)
+            raise Exception("not a valid Block Type")
     parent_node = HTMLNode("div", "", children_list)    
 
     return parent_node
@@ -60,8 +80,7 @@ def assign_tag(block_type):
     #ordered_list = "ordered_list"
     elif block_type == BlockType.ORDERED_LIST:
         return "ol"
-    else:
-        raise ValueError("no block type")
+
 
 def count_heading_level(line):
     # Counts number of '#' characters at beginning of a string, ignoring white space.
@@ -85,5 +104,13 @@ def text_to_children(text):
     return children
 
 def extract_code_content(block):
-    return block.strip("```")
+    lines = block.strip().split("\n")
+    if lines[0].strip() == "```" and lines[-1].strip() == "```":
+        code_content = "\n".join(lines[1:-1])
+        return code_content + "\n"
+    else:
+        content = block.strip().split("```")
+        if len(content) >= 3:
+            return content[1].strip() + "\n"
+        return ""
 
