@@ -46,14 +46,25 @@ def markdown_to_html_node(markdown):
                             line_content = parts[1].strip()
                         else:
                             line_content = line.strip()
-                line_node = HTMLNode("li", "", text_to_children(line_content))
-                line_nodes.append(line_node)
+                    line_node = HTMLNode("li", "", text_to_children(line_content))
+                    line_nodes.append(line_node)
+            if block_type == BlockType.UNORDERED_LIST:
+                list_node = HTMLNode("ul", "", line_nodes)
+                children_list.append(list_node)
+            elif block_type == BlockType.ORDERED_LIST:
+                list_node = HTMLNode("ol", "", line_nodes)
+                children_list.append(list_node)
         elif block_type == BlockType.PARAGRAPH:
             block_text = block.replace("\n", " ")
             paragraph_node = HTMLNode("p", "", text_to_children(block_text))
             children_list.append(paragraph_node)
         elif block_type == BlockType.QUOTE:
-            quote_node = HTMLNode("blockquote", "", text_to_children(block))
+            lines = block.split("\n")
+            cleaned_lines = []
+            for line in lines:
+                cleaned_lines.append(line.lstrip(">").strip())
+            cleaned_quote = ' '.join(cleaned_lines)
+            quote_node = HTMLNode("blockquote", "", text_to_children(cleaned_quote))
             children_list.append(quote_node)
         else:
             raise Exception("not a valid Block Type")
