@@ -11,6 +11,7 @@ def main():
         basepath = sys.argv[1]
     else:
         basepath = "/"
+    basepath = basepath.rstrip("/") + "/"
     template_path = "template.html"
     content_dir = "content"
     docs_dir = "docs"
