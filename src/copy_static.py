@@ -1,16 +1,16 @@
 import os
 import shutil
 
-def copy_static(destination_dir):
+def copy_static():
     print(f"Current working directory: {os.getcwd()}")
     # check if public exists and delete it if it does
-    if os.path.exists(destination_dir):
-        shutil.rmtree(destination_dir)
+    if os.path.exists("public"):
+        shutil.rmtree("public")
     # create a fresh public directory
-    print(f"Creating fresh {destination_dir} directory")
-    os.mkdir(destination_dir)
+    print("Creating fresh public directory")
+    os.mkdir("public")
     # Now start copying...
-    copy_recursive("static", destination_dir)
+    copy_recursive("static", "public")
 
 # Should take a source path and destination path
 def copy_recursive(src, dst):
