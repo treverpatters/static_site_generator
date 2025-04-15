@@ -1,6 +1,7 @@
 from markdown_to_html import markdown_to_html_node
 import htmlnode
 import os
+import re
 
 def extract_title(markdown):
     # pull the h1 header from the markdown file (the line the starts with a single #) and return it
@@ -23,7 +24,8 @@ def generate_page(from_path, template_path, dest_path, basepath):
         page = file.read()
     with open(template_path, "r") as file:
         template = file.read()
-
+    
+    basepath = basepath.rstrip("/") + "/"
     page_html = markdown_to_html_node(page) 
     page_html_string = page_html.to_html()
     page_title = extract_title(page)
@@ -33,6 +35,8 @@ def generate_page(from_path, template_path, dest_path, basepath):
     added_content = added_title.replace("{{ Content }}", page_html_string)
     content = added_content.replace('href="/', f'href="{basepath}')
     content = content.replace('src="/', f'src="{basepath}')
+    content = re.sub(r'src="(/[^"]*)"', f'src="{basepath}\\1"', content)
+
     # Now write the new full HTML page to a file at dest_path. Be sure to create any necessary directories if they don't exist
     os.makedirs(os.path.dirname(dest_path), exist_ok=True)
     with open(dest_path, "w") as f:
@@ -54,9 +58,3 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, bas
             generate_page(source_file_path, template_path, dest_file_path, basepath)
             
 
-    # crawl through content directory
-
-        # for each markdown file, generate a new .html file using the same template.html
-
-        # Should be written to the public directory in the same directory structure
-    
