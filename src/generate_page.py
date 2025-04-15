@@ -40,8 +40,9 @@ def generate_page(from_path, template_path, dest_path, basepath):
     result = template.replace("{{ Title }}", page_title)
     result = result.replace("{{ Content }}", page_html_string)
 
-    result = result.replace('href="/', f'href="{basepath}')
-    result = result.replace('src="/', f'src="{basepath}')
+    if basepath != "/":
+        result = result.replace('href="/', f'href="{basepath}')
+        result = result.replace('src="/', f'src="{basepath}')
 
     # Now write the new full HTML page to a file at dest_path. Be sure to create any necessary directories if they don't exist
     os.makedirs(os.path.dirname(dest_path), exist_ok=True)
