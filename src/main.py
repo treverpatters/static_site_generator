@@ -8,6 +8,7 @@ def main():
     basepath = sys.argv[1] if len(sys.argv) > 1 else "/"
     print(f"Building site with basepath: {basepath}")
     
+<<<<<<< HEAD
     # Set output directory to 'docs' (not 'public')
     output_dir = "docs"
     
@@ -30,6 +31,17 @@ def main():
         copy_recursive("images", os.path.join(output_dir, "images"))
     
     print(f"Site built successfully in {output_dir}/")
+=======
+    copy_static()
+    if len(sys.argv) > 1:
+        basepath = sys.argv[1]
+    else:
+        basepath = "/"
+    template_path = "template.html"
+    content_dir = "content"
+    docs_dir = "docs"
+    generate_pages_recursive(content_dir, template_path, docs_dir, basepath)
+>>>>>>> parent of 1ef58f8 (.)
 
 def copy_recursive(src, dst):
     # Create destination directory if it doesn't exist
