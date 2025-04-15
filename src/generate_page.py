@@ -31,30 +31,14 @@ def generate_page(from_path, template_path, dest_path, basepath):
     page_title = extract_title(page)
 
     # Replace {{ Title }} and {{ Content }} placeholders in template with HTML and title
-<<<<<<< HEAD
-    basepath = basepath.strip("/")
-    if basepath:
-        basepath = "/" + basepath + "/"
-    else:
-        basepath = "/"
-    
-    result = template.replace("{{ Title }}", page_title)
-    result = result.replace("{{ Content }}", page_html_string)
-
-    if basepath != "/":
-        result = result.replace('href="/', f'href="{basepath}')
-        result = result.replace('src="/', f'src="{basepath}')
-
-=======
     added_title = template.replace("{{ Title }}", page_title)
     added_content = added_title.replace("{{ Content }}", page_html_string)
     content = added_content.replace('href="/', f'href={basepath}')
     content = content.replace('src="/', f'src="{basepath}')
->>>>>>> parent of 58c66ce (fixed error in generate_page function, missing ')
     # Now write the new full HTML page to a file at dest_path. Be sure to create any necessary directories if they don't exist
     os.makedirs(os.path.dirname(dest_path), exist_ok=True)
     with open(dest_path, "w") as f:
-        f.write(result)
+        f.write(content)
 
 def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, basepath):
     # initiate variables
